@@ -1,6 +1,6 @@
 import argparse
 from math import gcd
-from typing import Callable
+from typing import Callable, Optional
 
 POLLARD_F = lambda x: x**2 + 1
 
@@ -12,13 +12,13 @@ def parser() -> argparse.ArgumentParser:
     return argp
 
 
-def fermat_factorize(n: int, max_iterations: int = 20) -> tuple[tuple[int, int], int]:
+def fermat_factorize(n: int, max_iterations: int = 20) -> tuple[Optional[tuple[int, int]], int]:
     """
     Fermat's method for factoring a number.
 
     :param int n: The number to factorize.
     :param int max_iterations: The maximum number of iterations to run.
-    :return tuple[tuple[int, int], int]: The factors of the number and the number of iterations.
+    :return tuple[Optional[tuple[int, int]], int]: The factors of the number and the number of iterations.
     """
     t0 = int(n**0.5)
 
@@ -48,7 +48,7 @@ def fermat_factorize(n: int, max_iterations: int = 20) -> tuple[tuple[int, int],
 
 def pollar_rho_factorize(
     n: int, x0: int = 2, f: Callable[[int], int] = POLLARD_F, max_iterations: int = 20
-) -> tuple[tuple[int, int], int]:
+) -> tuple[Optional[tuple[int, int]], int]:
     """
     Pollard's rho method for factoring a number.
 
@@ -56,7 +56,7 @@ def pollar_rho_factorize(
     :param int x0: The initial value for the sequence.
     :param Callable[[int], int] f: The function to use for the sequence.
     :param int max_iterations: The maximum number of iterations to run.
-    :return tuple[tuple[int, int], int]: The factors of the number and the number of iterations.
+    :return tuple[Optional[tuple[int, int]], int]: The factors of the number and the number of iterations.
     """
     x = x0
     y = x0
@@ -78,12 +78,12 @@ def pollar_rho_factorize(
 
             if factor > 1 and factor < n:
                 break
-        
+
         counter += 1
-    
+
     if counter >= max_iterations:
         return None, counter
-    
+
     second_factor = n // factor
     print(
         f"Conclusion:\nThe obtained two factors of n are (in increasing order): {min(factor, second_factor)} and {max(factor, second_factor)}\n"
